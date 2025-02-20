@@ -28,13 +28,10 @@ async def answer(chat_id: str, text: str):
 
 @app.post("/")
 async def read_root(obj: Answer):
-    # request: Request
-    # result = await request.json()
-    # obj = Answer.model_validate(result)
-    data = {"chat_id": ADMIN_ID, "text": obj.message.text}
+    data = {"chat_id": ADMIN_ID, "photo": obj.message.photo[-1].file_id}
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            f"https://api.telegram.org/bot{TG_API}/sendMessage", data=data
+            f"https://api.telegram.org/bot{TG_API}/sendPhoto", data=data
         ) as response:
             return response.status
 
