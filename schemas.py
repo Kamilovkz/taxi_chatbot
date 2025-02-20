@@ -147,6 +147,21 @@ class Photo(BaseModel):
     height: int
 
 
+class ReplayMessage(BaseModel):
+    message_id: int
+    fromF: From = Field(alias="from")
+    chat: Chat
+    date: int
+    text: str = None
+    photo: list[Photo] = None
+    caption: str = None
+    forward_from: From = None
+    forward_date: int = None
+    entities: list = None
+    caption_entities: list = None
+    media_group_id: int = None
+
+
 class Message(BaseModel):
     message_id: int
     fromTg: From = Field(alias="from")
@@ -156,6 +171,7 @@ class Message(BaseModel):
     sticker: dict = None
     photo: list[Photo] = None
     caption: str = None
+    reply_to_message: ReplayMessage = None
 
 
 class Answer(BaseModel):

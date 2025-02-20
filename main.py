@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 import uvicorn
 from schemas import Answer
 from dotenv import load_dotenv
@@ -28,13 +28,22 @@ async def answer(chat_id: str, text: str):
 
 @app.post("/")
 async def read_root(obj: Answer):
-    data = {"chat_id": ADMIN_ID, "photo": obj.message.photo[-1].file_id}
-    async with aiohttp.ClientSession() as session:
-        async with session.post(
-            f"https://api.telegram.org/bot{TG_API}/sendPhoto", data=data
-        ) as response:
-            return response.status
+    # TODO: here we can make more universal it, via creating a complex schemas with all type of message in telegram
+    if obj.message.photo is not None:
+        data = {"chat_id": ADMIN_ID, "photo": obj.message.photo[-1].file_id}
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                f"https://api.telegram.org/bot{TG_API}/sendPhoto", data=data
+            ) as response:
+                return response.status
 
+    else:
+        data = {"chat_id": ADMIN_ID, "text": obj.message.text}
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                f"https://api.telegram.org/bot{TG_API}/sendMessage", data=data
+            ) as response:
+                return response.status
     return {"ok": "work"}
 
 
