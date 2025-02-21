@@ -13,19 +13,6 @@ ADMIN_ID = os.getenv("ADMIN_CHAT_ID")
 app = FastAPI()
 
 
-@app.post("/answer")
-async def answer(chat_id: str, text: str):
-    data = {
-        "chat_id": chat_id,
-        "text": text,
-    }
-    async with aiohttp.ClientSession() as session:
-        async with session.post(
-            f"https://api.telegram.org/bot{TG_API}/sendMessage", data=data
-        ) as response:
-            return response.status
-
-
 @app.post("/")
 async def read_root(obj: Answer):
     # TODO: here we can make more universal it, via creating a complex schemas with all type of message in telegram
